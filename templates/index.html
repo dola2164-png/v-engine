@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vera AI — Marketing Decision & WhatsApp Engine</title>
+    <!-- Fonts & Icons -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --mp-red: #e23744; --mp-dark: #0f1117; --wa-green: #00a884; --wa-green-dark: #008069;
+            --wa-chat-bg: #efeae2; --wa-bubble-in: #ffffff; --wa-bubble-out: #d9fdd3;
+            --radius-lg: 12px; --radius-md: 8px; --radius-sm: 6px;
+        }
+        * { box-sizing: border-box; }
+        html, body {
+            height: 100vh; max-height: 100vh; margin: 0; padding: 0;
+            overflow: hidden !important; font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f1f4f9; color: #1e293b; display: flex; flex-direction: column;
+        }
+        .navbar-custom {
+            background: var(--mp-dark); border-bottom: 2px solid var(--mp-red);
+            padding: 4px 16px; flex-shrink: 0; height: 44px;
+        }
+        .brand-badge {
+            background: linear-gradient(135deg, #e23744 0%, #ff5263 100%);
+            font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; font-weight: 700;
+        }
+        .stat-badge {
+            background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+            color: #e2e8f0; font-size: 0.72rem; padding: 2px 8px; border-radius: 6px;
+            display: inline-flex; align-items: center; gap: 4px;
+        }
+        .app-body { flex: 1; min-height: 0; padding: 8px 12px; display: flex; gap: 12px; }
+        .panel-col { flex: 1; min-width: 0; height: 100%; display: flex; flex-direction: column; }
+        .glass-panel {
+            background: #ffffff; border: 1px solid #e2e8f0; border-radius: var(--radius-lg);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); display: flex; flex-direction: column;
+            height: 100%; min-height: 0; overflow: hidden;
+        }
+        .panel-header {
+            padding: 6px 12px; border-bottom: 1px solid #edf2f7; background: #fafbfc;
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; height: 38px;
+        }
+        .panel-content {
+            padding: 8px 12px; flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;
+        }
+        .filter-pill {
+            font-size: 0.72rem; padding: 2px 8px; border-radius: 12px; border: 1px solid #cbd5e1;
+            background: #ffffff; color: #475569; cursor: pointer; font-weight: 600;
+        }
+        .filter-pill:hover, .filter-pill.active { background: var(--mp-red); border-color: var(--mp-red); color: #ffffff; }
+        .btn-mp-primary {
+            background: linear-gradient(135deg, var(--mp-red) 0%, #ff4b5a 100%);
+            color: white; font-weight: 700; border: none; border-radius: var(--radius-md);
+            padding: 7px 12px; font-size: 0.82rem; box-shadow: 0 2px 8px rgba(226, 55, 68, 0.25); flex-shrink: 0;
+        }
+        .btn-mp-primary:hover { background: linear-gradient(135deg, #c92a36 0%, #e23744 100%); color: white; }
+        .phone-wrapper {
+            background: #ffffff; border: 1px solid #cbd5e1; border-radius: var(--radius-md);
+            overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column; flex: 1; min-height: 0;
+        }
+        .wa-header {
+            background: var(--wa-green-dark); color: #ffffff; padding: 6px 12px;
+            display: flex; align-items: center; gap: 10px; flex-shrink: 0; height: 44px;
+        }
+        .wa-avatar {
+            width: 30px; height: 30px; background: #ffffff; color: var(--mp-red);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem;
+        }
+        .wa-body {
+            background-color: var(--wa-chat-bg); background-image: radial-gradient(#d5d0c8 1px, transparent 1px);
+            background-size: 16px 16px; padding: 8px 10px; flex: 1; min-height: 0; overflow-y: auto; display: flex; flex-direction: column; gap: 6px;
+        }
+        .wa-msg {
+            max-width: 88%; padding: 7px 11px; border-radius: 8px; font-size: 0.83rem; line-height: 1.35;
+            position: relative; box-shadow: 0 1px 2px rgba(0,0,0,0.1); word-wrap: break-word;
+        }
+        .wa-msg-in { background: var(--wa-bubble-in); align-self: flex-start; border-top-left-radius: 0px; }
+        .wa-msg-out { background: var(--wa-bubble-out); align-self: flex-end; border-top-right-radius: 0px; }
+        .wa-msg-meta { font-size: 0.65rem; color: #8696a0; text-align: right; margin-top: 2px; }
+        .wa-footer {
+            background: #f0f2f5; padding: 5px 8px; display: flex; gap: 6px; align-items: center; border-top: 1px solid #e2e8f0; flex-shrink: 0;
+        }
+        .scenario-pill {
+            font-size: 0.7rem; padding: 3px 8px; border-radius: 6px; background: #f1f5f9; color: #334155;
+            cursor: pointer; font-weight: 600; border: 1px solid #e2e8f0; display: inline-flex; align-items: center; gap: 4px; white-space: nowrap;
+        }
+        .scenario-pill:hover { background: #e2e8f0; }
+        .pill-commit { border-left: 3px solid #10b981; }
+        .pill-auto { border-left: 3px solid #f59e0b; }
+        .pill-hostile { border-left: 3px solid #ef4444; }
+        .pill-curve { border-left: 3px solid #06b6d4; }
+        .toast-box {
+            position: fixed; bottom: 20px; right: 20px; background: #0f172a; color: #ffffff;
+            padding: 8px 16px; border-radius: 6px; box-shadow: 0 6px 18px rgba(0,0,0,0.3); font-weight: 600; font-size: 0.8rem;
+            opacity: 0; transform: translateY(10px); transition: all 0.2s ease; pointer-events: none; z-index: 9999;
+        }
+        .toast-box.show { opacity: 1; transform: translateY(0); }
+    </style>
+</head>
+<body>
+
+    <!-- 1. SLIM HEADER -->
+    <nav class="navbar navbar-dark navbar-custom d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-2">
+            <a class="navbar-brand d-flex align-items-center gap-2 m-0 p-0" href="/">
+                <div class="bg-danger text-white rounded-2 d-flex align-items-center justify-content-center" style="width: 26px; height: 26px;">
+                    <i class="fa-solid fa-wand-magic-sparkles" style="font-size: 0.75rem;"></i>
+                </div>
+                <div class="d-flex align-items-center gap-1">
+                    <span class="fw-bold text-white" style="font-size: 1rem;">magicpin</span>
+                    <span class="brand-badge">Vera AI</span>
+                </div>
+            </a>
+            
+            <div class="d-none d-md-flex align-items-center gap-1 ms-2">
+                <span class="stat-badge"><i class="fa-solid fa-layer-group text-danger"></i> {{ counts.category }} Categories</span>
+                <span class="stat-badge"><i class="fa-solid fa-store text-success"></i> {{ counts.merchant }} Merchants</span>
+                <span class="stat-badge"><i class="fa-solid fa-bolt text-warning"></i> {{ counts.trigger }} Scenarios</span>
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2">
+            <button onclick="reloadDataset()" class="btn btn-outline-warning btn-sm py-0 px-2 fw-bold" style="font-size: 0.72rem; height: 26px;">
+                <i class="fa-solid fa-arrows-rotate me-1"></i> Reset
+            </button>
+            <a href="/docs" target="_blank" class="btn btn-outline-light btn-sm py-0 px-2 fw-bold" style="font-size: 0.72rem; height: 26px; line-height: 24px;">
+                <i class="fa-solid fa-code me-1"></i> Docs
+            </a>
+        </div>
+    </nav>
+
+    <!-- 2. NO-SCROLL BODY (100vh) -->
+    <div class="app-body">
+        
+        <!-- LEFT PANEL: Trigger Composition -->
+        <div class="panel-col">
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-solid fa-bolt text-danger"></i>
+                        <span class="fw-bold text-dark small">Trigger Composition</span>
+                    </div>
+                    <span class="badge bg-danger-subtle text-danger font-monospace" style="font-size: 0.68rem;">POST /v1/tick</span>
+                </div>
+
+                <div class="panel-content">
+                    <!-- Filter Pills -->
+                    <div class="d-flex flex-wrap gap-1">
+                        <span class="filter-pill active" onclick="filterTriggers('all', this)">All ({{ triggers|length }})</span>
+                        <span class="filter-pill" onclick="filterTriggers('dentist', this)">🦷 Dentists</span>
+                        <span class="filter-pill" onclick="filterTriggers('salon', this)">💇 Salons</span>
+                        <span class="filter-pill" onclick="filterTriggers('restaurant', this)">🍕 Food</span>
+                        <span class="filter-pill" onclick="filterTriggers('gym', this)">🏋️ Gyms</span>
+                        <span class="filter-pill" onclick="filterTriggers('pharmacy', this)">💊 Meds</span>
+                    </div>
+
+                    <!-- Dropdown -->
+                    <div>
+                        <select id="triggerSelect" class="form-select form-select-sm font-monospace shadow-sm" style="font-size: 0.78rem; border-radius: var(--radius-sm);">
+                            {% for tid, t in triggers.items() %}
+                            <option value="{{ tid }}" data-category="{{ t.payload.category or t.merchant_id }}">
+                                [{{ t.kind }}] {{ tid }}
+                            </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <button class="btn btn-mp-primary w-100 d-flex align-items-center justify-content-center gap-2" id="composeBtn" onclick="composeSelectedTrigger()">
+                        <i class="fa-solid fa-wand-magic-sparkles"></i>
+                        <span>Compose & Sync to WhatsApp Simulator</span>
+                    </button>
+
+                    <div id="triggerAlert" class="alert alert-danger d-none py-1 px-2 small m-0" style="font-size: 0.75rem;"></div>
+
+                    <!-- Output Card -->
+                    <div id="compositionResult" class="d-none flex-grow-1" style="min-height: 0; display: flex; flex-direction: column;">
+                        <div class="card border border-slate-200 bg-light p-2 rounded-2 shadow-xs flex-grow-1 d-flex flex-column" style="min-height: 0;">
+                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                <span class="badge bg-dark px-2 py-1" id="resSendAs" style="font-size: 0.68rem;"><i class="fa-solid fa-user-check me-1"></i> vera</span>
+                                <span class="badge bg-success px-2 py-1" id="resCta" style="font-size: 0.68rem;">CTA: binary_yes_no</span>
+                            </div>
+
+                            <div class="bg-white p-2 rounded-2 border shadow-2xs mb-2 flex-grow-1" style="min-height: 0; overflow-y: auto; border-left: 3px solid var(--wa-green) !important;">
+                                <div class="text-muted fw-bold mb-1" style="font-size: 0.72rem;"><i class="fa-brands fa-whatsapp text-success me-1"></i> WhatsApp Outreach Copy:</div>
+                                <div id="resBody" class="text-dark" style="font-size: 0.83rem; line-height: 1.4; white-space: pre-wrap;">...</div>
+                            </div>
+
+                            <div class="bg-white p-1 px-2 rounded border mb-2 flex-shrink-0" style="font-size: 0.72rem;">
+                                <div class="fw-bold text-secondary" style="font-size: 0.68rem;"><i class="fa-solid fa-brain me-1 text-primary"></i> Decision Rationale:</div>
+                                <div id="resRationale" class="text-muted" style="line-height: 1.3;">...</div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center pt-1 border-top flex-shrink-0" style="gap: 8px;">
+                                <div class="text-muted font-monospace text-truncate" id="resConvId" style="font-size: 0.68rem; min-width: 0; max-width: 60%;">conv_id</div>
+                                <button class="btn btn-sm btn-dark px-2 py-0 fw-semibold flex-shrink-0" onclick="copyMessageText()" style="font-size: 0.72rem; height: 24px;">
+                                    <i class="fa-regular fa-copy me-1"></i> Copy
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: WhatsApp Simulator -->
+        <div class="panel-col">
+            <div class="glass-panel">
+                <div class="panel-header">
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fa-brands fa-whatsapp text-success"></i>
+                        <span class="fw-bold text-dark small">WhatsApp Chat Simulator</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="badge bg-success-subtle text-success font-monospace" style="font-size: 0.68rem;">POST /v1/reply</span>
+                        <button class="btn btn-sm btn-outline-secondary py-0 px-2" onclick="resetChat()" style="font-size: 0.72rem; height: 24px;" title="Reset Chat Conversation">
+                            <i class="fa-solid fa-rotate-right me-1"></i> Reset
+                        </button>
+                    </div>
+                </div>
+
+                <div class="panel-content" style="padding: 8px 10px;">
+                    <!-- Phone Frame -->
+                    <div class="phone-wrapper">
+                        <div class="wa-header">
+                            <div class="wa-avatar" id="simAvatar">V</div>
+                            <div>
+                                <div class="fw-bold" id="simTitle" style="font-size: 0.82rem; line-height: 1.1;">Vera AI <i class="fa-solid fa-circle-check text-info" style="font-size: 0.7rem;"></i></div>
+                                <div class="text-white-50" id="simSubtitle" style="font-size: 0.66rem;">magicpin verified business • online</div>
+                            </div>
+                        </div>
+
+                        <div class="wa-body" id="chatContainer">
+                            <div class="text-center text-muted p-3 my-auto" id="simPlaceholder">
+                                <i class="fa-solid fa-wand-magic-sparkles text-danger fs-3 mb-1 d-block opacity-75"></i>
+                                <div class="fw-bold text-dark small">Simulator Standby</div>
+                                <div style="font-size: 0.74rem;">Select a trigger on the left and click <strong>"Compose & Sync"</strong> to start.</div>
+                            </div>
+                        </div>
+
+                        <div class="wa-footer">
+                            <input type="text" id="chatInput" class="form-control form-control-sm border-0 shadow-none px-2 py-1" style="border-radius: 16px; font-size: 0.8rem; height: 30px;" placeholder="Type reply as merchant..." autocomplete="off">
+                            <button class="btn btn-success btn-sm rounded-circle d-flex align-items-center justify-content-center p-0 flex-shrink-0" style="width: 28px; height: 28px;" id="sendBtn" onclick="sendReply()">
+                                <i class="fa-solid fa-paper-plane" style="font-size: 0.75rem;"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Quick Scenario Buttons -->
+                    <div class="d-flex flex-wrap gap-1 flex-shrink-0" style="max-height: 58px; overflow-y: auto;">
+                        <span class="scenario-pill pill-commit" onclick="setChatText('Ok lets do it. Whats next?')">
+                            <i class="fa-solid fa-circle-check text-success"></i> "Ok let's do it"
+                        </span>
+                        <span class="scenario-pill pill-commit" onclick="setChatText('Yes, go ahead')">
+                            <i class="fa-solid fa-paper-plane text-success"></i> "Yes, go ahead"
+                        </span>
+                        <span class="scenario-pill pill-hostile" onclick="setChatText('no change i need')">
+                            <i class="fa-solid fa-check text-primary"></i> "no change i need"
+                        </span>
+                        <span class="scenario-pill pill-hostile" onclick="setChatText('Stop messaging')">
+                            <i class="fa-solid fa-ban text-danger"></i> "Stop messaging"
+                        </span>
+                        <span class="scenario-pill pill-hostile" onclick="setChatText('Not interested')">
+                            <i class="fa-solid fa-circle-xmark text-danger"></i> "Not interested"
+                        </span>
+                        <span class="scenario-pill pill-curve" onclick="setChatText('What does this cost?')">
+                            <i class="fa-solid fa-tag text-primary"></i> "Cost?"
+                        </span>
+                        <span class="scenario-pill pill-curve" onclick="setChatText('Change the headline')">
+                            <i class="fa-solid fa-pen text-info"></i> "Change headline"
+                        </span>
+                        <span class="scenario-pill pill-curve" onclick="setChatText('Can you help with GST?')">
+                            <i class="fa-solid fa-file-invoice text-info"></i> "Help with GST?"
+                        </span>
+                        <span class="scenario-pill pill-curve" onclick="setChatText('How did you calculate the 30% drop?')">
+                            <i class="fa-solid fa-calculator text-warning"></i> "Calculate 30% drop?"
+                        </span>
+                        <span class="scenario-pill pill-auto" onclick="setChatText('Thank you for contacting us! Our team will respond shortly.')">
+                            <i class="fa-solid fa-robot text-warning"></i> Auto-reply
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Floating Copy Toast -->
+    <div id="copyToast" class="toast-box">
+        <i class="fa-solid fa-circle-check text-success me-1"></i>
+        <span>Copied to clipboard!</span>
+    </div>
+
+    <script>
+        let currentMerchantId = "m_001_drmeera_dentist_delhi";
+        let currentConversationId = "conv_interactive_demo";
+        let currentSendAs = "vera";
+        let turnCount = 1;
+
+        document.addEventListener("DOMContentLoaded", function() {
+            const input = document.getElementById("chatInput");
+            if (input) {
+                input.addEventListener("keydown", function(e) {
+                    if (e.key === "Enter") {
+                        e.preventDefault();
+                        sendReply();
+                    }
+                });
+            }
+        });
+
+        function filterTriggers(cat, el) {
+            document.querySelectorAll('.filter-pill').forEach(p => p.classList.remove('active'));
+            el.classList.add('active');
+
+            const select = document.getElementById("triggerSelect");
+            const options = select.querySelectorAll("option");
+            let firstVisible = null;
+
+            options.forEach(opt => {
+                const text = opt.text.toLowerCase();
+                const optCat = (opt.getAttribute("data-category") || "").toLowerCase();
+                if (cat === "all" || text.includes(cat) || optCat.includes(cat)) {
+                    opt.style.display = "";
+                    if (!firstVisible) firstVisible = opt;
+                } else {
+                    opt.style.display = "none";
+                }
+            });
+
+            if (firstVisible) {
+                select.value = firstVisible.value;
+            }
+        }
+
+        async function composeSelectedTrigger() {
+            const select = document.getElementById("triggerSelect");
+            const tid = select.value;
+            const btn = document.getElementById("composeBtn");
+            const alertBox = document.getElementById("triggerAlert");
+            
+            if (!tid) return;
+
+            alertBox.classList.add("d-none");
+            btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span> Composing & Syncing...';
+            btn.disabled = true;
+
+            try {
+                const res = await fetch("/v1/tick", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        now: new Date().toISOString(),
+                        available_triggers: [tid]
+                    })
+                });
+
+                if (!res.ok) throw new Error("HTTP " + res.status + " server error");
+
+                const data = await res.json();
+                if (data.actions && data.actions.length > 0) {
+                    const act = data.actions[0];
+                    currentMerchantId = act.merchant_id || "m_unknown";
+                    currentConversationId = act.conversation_id || "conv_" + tid;
+                    currentSendAs = act.send_as || "vera";
+                    turnCount = 1;
+
+                    // 1. Update left panel
+                    document.getElementById("resBody").innerText = act.body;
+                    document.getElementById("resRationale").innerText = act.rationale;
+                    document.getElementById("resSendAs").innerHTML = '<i class="fa-solid fa-user-check me-1"></i> Send As: ' + act.send_as;
+                    document.getElementById("resCta").innerText = "CTA: " + act.cta;
+                    document.getElementById("resConvId").innerText = "ID: " + act.conversation_id;
+                    document.getElementById("compositionResult").classList.remove("d-none");
+
+                    // 2. Load into simulator
+                    loadTriggerIntoChat(act);
+                } else {
+                    alertBox.innerText = "No action returned (trigger may be suppressed). Click Reset & Reload to refresh.";
+                    alertBox.classList.remove("d-none");
+                }
+            } catch (err) {
+                alertBox.innerText = "Error: " + err.message;
+                alertBox.classList.remove("d-none");
+            } finally {
+                btn.innerHTML = '<i class="fa-solid fa-wand-magic-sparkles"></i> <span>Compose & Sync to WhatsApp Simulator</span>';
+                btn.disabled = false;
+            }
+        }
+
+        function loadTriggerIntoChat(act) {
+            const container = document.getElementById("chatContainer");
+            const timeStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const mid = act.merchant_id || "";
+            let displayName = "Vera AI";
+            let avatarChar = "V";
+
+            if (mid.includes("meera")) { displayName = "Dr. Meera Dental Clinic"; avatarChar = "M"; }
+            else if (mid.includes("bharat")) { displayName = "Dr. Bharat Dental Care"; avatarChar = "B"; }
+            else if (mid.includes("studio11")) { displayName = "Studio11 Family Salon"; avatarChar = "S"; }
+            else if (mid.includes("glamour")) { displayName = "Glamour Touch Salon"; avatarChar = "G"; }
+            else if (mid.includes("pizzajunction")) { displayName = "Pizza Junction"; avatarChar = "P"; }
+            else if (mid.includes("southindiancafe")) { displayName = "South Indian Cafe"; avatarChar = "S"; }
+            else if (mid.includes("powerhouse")) { displayName = "Powerhouse Gym"; avatarChar = "P"; }
+            else if (mid.includes("zenyoga")) { displayName = "Zen Yoga Studio"; avatarChar = "Z"; }
+            else if (mid.includes("apollo")) { displayName = "Apollo Pharmacy"; avatarChar = "A"; }
+            else if (mid.includes("sunrise")) { displayName = "Sunrise Pharmacy"; avatarChar = "S"; }
+
+            const headerTitle = document.getElementById("simTitle");
+            if (headerTitle) headerTitle.innerHTML = displayName + ' <i class="fa-solid fa-circle-check text-info" style="font-size: 0.7rem;"></i>';
+            const subtitle = document.getElementById("simSubtitle");
+            if (subtitle) subtitle.innerText = `magicpin verified business • online (${mid})`;
+            const avatar = document.getElementById("simAvatar");
+            if (avatar) avatar.innerText = avatarChar;
+
+            const senderLabel = act.send_as === "merchant_on_behalf" ? displayName : "Vera";
+            container.innerHTML = `<div class="wa-msg wa-msg-in">
+                <strong>${senderLabel}:</strong> ${escapeHtml(act.body)}
+                <div class="wa-msg-meta">${timeStr}</div>
+            </div>`;
+            container.scrollTop = container.scrollHeight;
+        }
+
+        async function sendReply() {
+            const input = document.getElementById("chatInput");
+            const text = input.value.trim();
+            if (!text) return;
+            
+            const container = document.getElementById("chatContainer");
+            const timeStr = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            container.innerHTML += `<div class="wa-msg wa-msg-out">
+                ${escapeHtml(text)}
+                <div class="wa-msg-meta">${timeStr} <i class="fa-solid fa-check-double text-primary"></i></div>
+            </div>`;
+            
+            input.value = "";
+            turnCount++;
+            container.scrollTop = container.scrollHeight;
+
+            const sendBtn = document.getElementById("sendBtn");
+            sendBtn.disabled = true;
+
+            try {
+                const res = await fetch("/v1/reply", {
+                    method: "POST",
+                    headers: {"Content-Type": "application/json"},
+                    body: JSON.stringify({
+                        conversation_id: currentConversationId,
+                        merchant_id: currentMerchantId,
+                        customer_id: null,
+                        from_role: "merchant",
+                        message: text,
+                        received_at: new Date().toISOString(),
+                        turn_number: turnCount
+                    })
+                });
+
+                const data = await res.json();
+                const respTime = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+                
+                if (data.action === "send") {
+                    container.innerHTML += `<div class="wa-msg wa-msg-in">
+                        <strong>Vera:</strong> ${escapeHtml(data.body)}
+                        <div class="mt-1 pt-1 border-top text-muted fst-italic" style="font-size: 0.72rem;">
+                            <i class="fa-solid fa-lightbulb text-warning me-1"></i>${escapeHtml(data.rationale)}
+                        </div>
+                        <div class="wa-msg-meta">${respTime}</div>
+                    </div>`;
+                } else if (data.action === "wait") {
+                    container.innerHTML += `<div class="p-2 rounded bg-warning-subtle text-dark small border border-warning" style="font-size: 0.75rem;">
+                        <i class="fa-solid fa-clock me-1 text-warning"></i> <strong>[Vera State: WAITING ${data.wait_seconds}s]</strong>
+                        <div class="mt-1">${escapeHtml(data.rationale)}</div>
+                    </div>`;
+                } else if (data.action === "end") {
+                    container.innerHTML += `<div class="p-2 rounded bg-danger-subtle text-danger small border border-danger" style="font-size: 0.75rem;">
+                        <i class="fa-solid fa-ban me-1 text-danger"></i> <strong>[Vera State: ENDED / OPTED OUT]</strong>
+                        <div class="mt-1">${escapeHtml(data.rationale)}</div>
+                    </div>`;
+                }
+            } catch (e) {
+                container.innerHTML += `<div class="p-2 rounded bg-danger text-white small">Error: ${escapeHtml(e.message)}</div>`;
+            } finally {
+                sendBtn.disabled = false;
+                container.scrollTop = container.scrollHeight;
+            }
+        }
+
+        function setChatText(t) {
+            const input = document.getElementById("chatInput");
+            input.value = t;
+            input.focus();
+        }
+
+        function resetChat() {
+            composeSelectedTrigger();
+        }
+
+        async function reloadDataset() {
+            if (confirm("Reset in-memory state and reload the base seed dataset?")) {
+                await fetch("/v1/teardown", {method: "POST"});
+                window.location.reload();
+            }
+        }
+
+        function copyMessageText() {
+            const text = document.getElementById("resBody").innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const toast = document.getElementById("copyToast");
+                toast.classList.add("show");
+                setTimeout(() => { toast.classList.remove("show"); }, 1800);
+            });
+        }
+
+        function escapeHtml(text) {
+            if (!text) return "";
+            const div = document.createElement("div");
+            div.textContent = text;
+            return div.innerHTML;
+        }
+    </script>
+</body>
+</html>
