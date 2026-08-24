@@ -42,110 +42,44 @@ not a chatbot.
 
 ```mermaid
 flowchart TD
-    Harness["🧪 <b>MAGICPIN JUDGE HARNESS</b><br/><i>POST /v1/context → /v1/tick → /v1/reply</i>"]
+    A["🤖 Judge Harness / Merchant<br/>sends a request"] --> B["⚡ FastAPI App<br/>/context · /tick · /reply"]
+    B --> C["🗄️ ContextStore<br/>remembers merchant & customer data"]
+    B --> D["💬 ConversationManager<br/>tracks where the chat left off"]
+    C --> E["⚖️ Decision Engine<br/>picks the most urgent thing to say"]
+    D --> E
+    E --> F["✍️ MessageComposer<br/>writes the message in the right tone"]
+    F --> G["🛡️ Validator<br/>checks it's true & safe"]
+    G --> H["📤 WhatsApp Message Sent"]
 
-    subgraph API["⚡ FastAPI Application — bot.py : 8080"]
-        direction LR
-        Ctx(["/context"])
-        Tick(["/tick"])
-        Reply(["/reply"])
-    end
+    classDef harness fill:#e23744,color:#fff,stroke:#7a1520,stroke-width:2px
+    classDef api fill:#009688,color:#fff,stroke:#00332e,stroke-width:2px
+    classDef data fill:#22c55e,color:#fff,stroke:#0d5223,stroke-width:2px
+    classDef conv fill:#f59e0b,color:#1a1a1a,stroke:#7a4a00,stroke-width:2px
+    classDef decision fill:#8e44ad,color:#fff,stroke:#3c1d47,stroke-width:2px
+    classDef compose fill:#0ea5e9,color:#fff,stroke:#053a54,stroke-width:2px
+    classDef check fill:#ef4444,color:#fff,stroke:#7a1414,stroke-width:2px
+    classDef output fill:#facc15,color:#1a1a1a,stroke:#7a5c00,stroke-width:3px
 
-    Harness --> API
-
-    subgraph Store["🗄️ ContextStore — context_store.py"]
-        direction TB
-        S1["Category contexts"]
-        S2["Merchant snapshots"]
-        S3["Customer history"]
-        S4["Trigger payloads"]
-        S5["Suppression + opt-out registry"]
-        S6["🔒 RLock thread-safe"]
-    end
-
-    subgraph Conv["💬 ConversationManager — conversation_manager.py"]
-        direction TB
-        IC["🧠 IntentClassifier<br/>9 intents · regex-based · deterministic"]
-        SM["State Machine<br/>PROPOSED → DRAFT_READY → COMPLETED / REJECTED"]
-    end
-
-    Ctx --> Store
-    Tick --> Store
-    Reply --> Conv
-    Conv -.reads/writes.-> Store
-
-    Store --> Decision
-
-    subgraph Decision["🎯 Decision Engine — decision_engine.py"]
-        direction TB
-        D1["1️⃣ Trigger evaluation + opt-out filter"]
-        D2["2️⃣ Urgency ranking — priority score desc."]
-        D3["3️⃣ Top-20 trigger cap"]
-    end
-
-    Decision --> Sig
-    Decision --> Cat
-    Decision --> Val
-
-    subgraph Sig["🔎 SignalExtractor"]
-        direction TB
-        SigA["extract_identity"]
-        SigB["extract_performance"]
-        SigC["extract_offers"]
-        SigD["extract_aggregates"]
-        SigE["extract_digest"]
-    end
-
-    subgraph Cat["🎭 CategoryRules"]
-        direction TB
-        CatA["🦷 Dentists · 💇 Salons"]
-        CatB["🏋️ Gyms · 🍕 Restaurants · 💊 Pharmacies"]
-        CatC["Salutations · Tone profile · Peer benchmarks"]
-    end
-
-    subgraph Val["🛡️ Validator"]
-        direction TB
-        ValA["Taboo filter"]
-        ValB["CTA check"]
-        ValC["Anti-hallucination validation"]
-    end
-
-    Sig --> Composer
-    Cat --> Composer
-    Val --> Composer
-
-    subgraph Composer["✍️ MessageComposer — composer.py"]
-        direction TB
-        C1["16 trigger handlers:<br/>research_digest · regulation_change · recall_due<br/>perf_dip · renewal_due · festival_upcoming<br/>winback_eligible · seasonal_perf_dip · supply_alert<br/>trial_followup · +6 more"]
-        C2["🔀 Dynamic fallback synthesizer"]
-    end
-
-    Composer --> Output["📤 Zero-Hallucination<br/>WhatsApp Message"]
-
-    classDef harness fill:#e23744,stroke:#7a1520,stroke-width:2px,color:#fff,font-weight:bold
-    classDef api fill:#009688,stroke:#00332e,stroke-width:2px,color:#fff
-    classDef store fill:#3776AB,stroke:#12233a,stroke-width:2px,color:#fff
-    classDef conv fill:#8e44ad,stroke:#3c1d47,stroke-width:2px,color:#fff
-    classDef decision fill:#f59e0b,stroke:#7a4a00,stroke-width:2px,color:#1a1a1a,font-weight:bold
-    classDef sig fill:#22c55e,stroke:#0d5223,stroke-width:2px,color:#fff
-    classDef cat fill:#ec4899,stroke:#7a1f52,stroke-width:2px,color:#fff
-    classDef val fill:#ef4444,stroke:#7a1414,stroke-width:2px,color:#fff
-    classDef composer fill:#0ea5e9,stroke:#053a54,stroke-width:2px,color:#fff,font-weight:bold
-    classDef output fill:#facc15,stroke:#7a5c00,stroke-width:3px,color:#1a1a1a,font-weight:bold
-
-    class Harness harness
-    class Ctx,Tick,Reply api
-    class S1,S2,S3,S4,S5,S6 store
-    class IC,SM conv
-    class D1,D2,D3 decision
-    class SigA,SigB,SigC,SigD,SigE sig
-    class CatA,CatB,CatC cat
-    class ValA,ValB,ValC val
-    class C1,C2 composer
-    class Output output
+    class A harness
+    class B api
+    class C data
+    class D conv
+    class E decision
+    class F compose
+    class G check
+    class H output
 ```
 
-> 💡 This diagram renders natively on GitHub. If you're viewing it somewhere that doesn't support Mermaid (some IDEs, plain-text viewers), open the README on GitHub directly, or paste the code block into the [Mermaid Live Editor](https://mermaid.live) to view/export it as an image.
+> 💡 This diagram renders natively on GitHub. If viewing elsewhere without Mermaid support, paste the code block into [Mermaid Live Editor](https://mermaid.live) to view or export it as an image.
+
+**How it works:**
+1. A request comes in — either a merchant reply, or the harness checking if it's time to reach out.
+2. The **FastAPI App** receives it and routes it.
+3. **ContextStore** looks up what's known about that merchant/customer, and **ConversationManager** checks where the conversation left off.
+4. The **Decision Engine** picks the single most important thing to say right now.
+5. **MessageComposer** writes it in that merchant's category voice (dentist ≠ salon ≠ gym).
+6. **Validator** checks it for banned words, missing CTAs, or made-up facts before it's allowed to send.
+7. Message goes out on WhatsApp.
 
 ---
 
