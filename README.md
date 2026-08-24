@@ -16,7 +16,7 @@ Vera doesn't guess. She reads live merchant context, understands what matters, a
 hyper-specific, category-calibrated outreach messages that feel written by a domain expert —
 not a chatbot.
 
-[Live Demo](#-live-interactive-demo) · [Architecture](#-system-architecture) · [API Docs](#-api-contract) · [Quickstart](#-quickstart)
+[Live Demo](#-live-interactive-demo) · [Architecture](#%EF%B8%8F-system-architecture) · [API Docs](#-api-contract) · [Quickstart](#-quickstart)
 
 </div>
 
