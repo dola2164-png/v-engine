@@ -4,13 +4,13 @@
 <img src="https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white" alt="FastAPI">
 <img src="https://img.shields.io/badge/Python-3.11+-3776AB?style=for-the-badge&logo=python&logoColor=white" alt="Python">
 <img src="https://img.shields.io/badge/Tests-6%2F6_Passing-22c55e?style=for-the-badge&logo=pytest&logoColor=white" alt="Tests">
-<img src="https://img.shields.io/badge/Score-50%2F50_100%25-f59e0b?style=for-the-badge" alt="Score">
+<img src="https://img.shields.io/badge/Internal_Sim_Score-50%2F50_100%25-f59e0b?style=for-the-badge" alt="Score">
 
 # 🪄 Marketing Decision & WhatsApp Engine
 Live: [https://v-engine.onrender.com/](https://v-engine.onrender.com/)
 
 
-**A zero-hallucination, sub-5ms deterministic marketing intelligence engine for magicpin merchants.**
+**A zero-hallucination, sub-5ms (warm) deterministic marketing intelligence engine for magicpin merchants.**
 
 Vera doesn't guess. She reads live merchant context, understands what matters, and composes
 hyper-specific, category-calibrated outreach messages that feel written by a domain expert —
@@ -26,13 +26,15 @@ not a chatbot.
 
 | Dimension | Generic LLM Bot | **Vera AI Engine** |
 |-----------|-----------------|-------------------|
-| **Response time** | 2,000 – 5,000ms (cloud GPU) | **< 5ms (local in-memory)** |
+| **Response time** | 2,000 – 5,000ms (cloud GPU) | **< 5ms warm / local in-memory (cold start on free-tier hosting may be slower — see note below)** |
 | **Hallucination risk** | High — invents prices, dates | **Zero — all facts from live context** |
 | **Category intelligence** | Generic tone for all verticals | **Dentist ≠ Salon ≠ Gym — each has its own voice, taboos, and peer benchmarks** |
 | **Merchant personalization** | First name only | **Owner name, locality, live offer prices, view deltas, customer aggregates** |
 | **Multi-turn conversation** | Repeats same response | **State machine: COMMIT → DRAFT_READY → COMPLETED** |
 | **Opt-out handling** | None | **Instant suppression + registry update** |
 | **API Cost** | \$0.01–\$0.10 per message | **Free — runs on your server RAM** |
+
+> **Note on performance numbers:** the sub-5ms figure reflects request-handling latency inside the app once the process is warm (in-memory lookups, no network/LLM calls). On free-tier hosting (e.g. Render's free plan), the *first* request after idle can be slower due to cold-start/spin-up time — that's a hosting-platform characteristic, not the engine's processing time. Run `uvicorn` locally for a true cold-to-warm comparison if you want to verify this yourself.
 
 ---
 
@@ -177,7 +179,9 @@ Each vertical speaks its own language — Vera switches automatically:
 
 ## 🌐 Live Interactive Demo
 
-An interactive web dashboard is built-in at `http://localhost:8080`:
+Live: **[https://v-engine.onrender.com/](https://v-engine.onrender.com/)**
+
+An interactive web dashboard is also built-in and runs at `http://localhost:8080` when hosted locally:
 
 ```
 ┌──────────────────────────────────────┬─────────────────────────────────────┐
@@ -259,8 +263,11 @@ tests/test_suite.py::test_hostile_exit               PASSED  [100%]
 
 ============================== 6 passed in 0.48s ==============================
 ```
+*(Timing measured on a warm local run; expect variance on first/cold invocation or slower CI hardware.)*
 
-### Judge Simulator Scores
+### Internal Simulator Scores
+
+> These scores come from an **internal test harness I built to self-evaluate against the challenge rubric** — they are not an official score from the magicpin judges. They're included here to show how the engine performs against the rubric criteria I understood, not as a claim about the competition outcome.
 
 ```
   Avg Specificity        [████████████████████] 10/10
@@ -269,7 +276,7 @@ tests/test_suite.py::test_hostile_exit               PASSED  [100%]
   Avg Decision Quality   [████████████████████] 10/10
   Avg Engagement         [████████████████████] 10/10
 
-  OVERALL SCORE: 50 / 50  (100%) — EXCELLENT
+  INTERNAL SIMULATOR SCORE: 50 / 50 (100%)
 ```
 
 ---
@@ -299,7 +306,7 @@ open http://localhost:8080
 python -m pytest tests/test_suite.py -v
 ```
 
-live URL : [https://vera-marketing-engine.onrender.com](https://v-engine.onrender.com/)
+Live URL: [https://v-engine.onrender.com/](https://v-engine.onrender.com/)
 
 ---
 
@@ -362,6 +369,6 @@ vera-marketing-engine/
 
 Built with ❤️ for the magicpin Vera AI Challenge
 
-**Zero hallucination. Sub-5ms response. 100% context-grounded.**
+**Zero hallucination. Deterministic. Context-grounded.**
 
 </div>
