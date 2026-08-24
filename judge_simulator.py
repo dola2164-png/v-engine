@@ -1,4 +1,4 @@
-﻿#!/usr/bin/env python3
+#!/usr/bin/env python3
 """
 magicpin AI Challenge â€” LLM-Powered Judge Simulator
 ====================================================
@@ -21,16 +21,22 @@ Author: magicpin AI Challenge Team
 # =============================================================================
 
 # Your bot's URL (where your bot is running)
-BOT_URL = "http://127.0.0.1:8080"
+BOT_URL = "https://v-engine.onrender.com"
 
 # Choose your LLM provider: "openai", "anthropic", "gemini", "deepseek", "groq", "ollama", "openrouter"
-LLM_PROVIDER = "openai"
+LLM_PROVIDER = "groq"
 
-# Your API key (paste your key here)
-LLM_API_KEY = ""  # <-- PUT YOUR API KEY HERE
+# API key loaded from .env file or environment variable (never commit raw keys to git)
+import os as _os
+try:
+    from dotenv import load_dotenv as _load
+    _load()
+except ImportError:
+    pass
+LLM_API_KEY = _os.environ.get("LLM_API_KEY", "")
 
-# Model to use (leave empty for default, or specify like "gpt-4o", "claude-3-5-sonnet-20241022", etc.)
-LLM_MODEL = ""  # <-- Optional: specify model or leave empty for default
+# Model to use
+LLM_MODEL = "llama3-70b-8192"  # Groq LLaMA3 70B
 
 # For Ollama only: local server URL
 OLLAMA_URL = "http://localhost:11434"
