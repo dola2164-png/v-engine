@@ -144,28 +144,8 @@ Live: **[https://v-engine.onrender.com/](https://v-engine.onrender.com/)**
 
 An interactive web dashboard is also built-in and runs at `http://localhost:8080` when hosted locally:
 
-```
-┌──────────────────────────────────────┬─────────────────────────────────────┐
-│     🔴 Trigger Composition Panel     │    📱 WhatsApp Chat Simulator       │
-│                                      │                                     │
-│  Filter: All | Dentist | Salon | Gym │  ┌─────────────────────────────┐   │
-│                                      │  │ 🟢 Dr. Meera Dental Clinic  │   │
-│  [ research_digest for drmeera ▼ ]   │  ├─────────────────────────────┤   │
-│                                      │  │ Vera:  "Dr. Meera, JIDA's   │   │
-│  [ Compose & Sync to WhatsApp Sim ]  │  │  Oct issue landed..." ✓✓    │   │
-│                                      │  │                             │   │
-│  WhatsApp Copy:                      │  │    "Yes, go ahead!" ✓✓     │   │
-│  ┌──────────────────────────────┐    │  │                             │   │
-│  │ Dr. Meera, JIDA's Oct issue  │    │  │ Vera: "Done! Campaign draft │   │
-│  │ landed. 2,100-patient trial  │    │  │  prepared for Dr. Meera..." │   │
-│  │ showed 3-month fluoride...   │    │  │                             │   │
-│  └──────────────────────────────┘    │  │ 💬 Type reply as merchant   │   │
-│                                      │  └─────────────────────────────┘   │
-│  Rationale: Clinical anchor, low-    │                                     │
-│  friction open-ended CTA...          │  Quick replies: "Yes, go ahead"    │
-│                                      │  "Stop messaging" "What's the cost?"│
-└──────────────────────────────────────┴─────────────────────────────────────┘
-```
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/d070db79-d96f-4cc7-9a24-12e1733a2826" />
+
 
 ---
 
