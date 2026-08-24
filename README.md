@@ -144,7 +144,8 @@ Live: **[https://v-engine.onrender.com/](https://v-engine.onrender.com/)**
 
 An interactive web dashboard is also built-in and runs at `http://localhost:8080` when hosted locally:
 
-<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/d070db79-d96f-4cc7-9a24-12e1733a2826" />
+<img width="1920" height="1200" alt="image" src="https://github.com/user-attachments/assets/c1b2b539-f40b-47da-98b0-cb36f304970d" />
+
 
 
 ---
