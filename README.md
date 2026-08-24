@@ -7,7 +7,7 @@
 <img src="https://img.shields.io/badge/Score-50%2F50_100%25-f59e0b?style=for-the-badge" alt="Score">
 
 # 🪄 Vera AI — Marketing Decision & WhatsApp Engine
-
+Live: [https://v-engine.onrender.com/](https://v-engine.onrender.com/)
 **A zero-hallucination, sub-5ms deterministic marketing intelligence engine for magicpin merchants.**
 
 Vera doesn't guess. She reads live merchant context, understands what matters, and composes
