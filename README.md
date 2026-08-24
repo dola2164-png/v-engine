@@ -299,14 +299,7 @@ open http://localhost:8080
 python -m pytest tests/test_suite.py -v
 ```
 
-### Deploy Free on Render.com
-
-1. Push this repo to GitHub
-2. Go to [render.com](https://render.com) → **New Web Service** → Connect repo
-3. Set **Start Command**: `uvicorn bot:app --host 0.0.0.0 --port $PORT`
-4. Select **Free plan** → Deploy
-
-Your live URL will be: `https://vera-marketing-engine.onrender.com`
+live URL : [https://vera-marketing-engine.onrender.com](https://v-engine.onrender.com/)
 
 ---
 
