@@ -6,7 +6,7 @@
 <img src="https://img.shields.io/badge/Tests-6%2F6_Passing-22c55e?style=for-the-badge&logo=pytest&logoColor=white" alt="Tests">
 <img src="https://img.shields.io/badge/Score-50%2F50_100%25-f59e0b?style=for-the-badge" alt="Score">
 
-# 🪄 Vera AI — Marketing Decision & WhatsApp Engine
+# 🪄 Marketing Decision & WhatsApp Engine
 Live: [https://v-engine.onrender.com/](https://v-engine.onrender.com/)
 
 
